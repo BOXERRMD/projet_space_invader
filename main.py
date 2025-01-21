@@ -16,15 +16,15 @@ running = True
 
 
 
-
 class Jeu:
 
     def __init__(self):
         """
         Initialisation du jeu
         """
-        self.__vaisseau: Vaisseau = Vaisseau(vaisseau_posX, vaisseau_posY, screen)
-        self.__ennemies: list[Ennemie] = [Ennemie(screen) for _ in range(50)]
+        self.__vaisseau: Vaisseau = Vaisseau(vaisseau_posX, vaisseau_posY, screen) # le vaisseau contrôlé par le joueur
+
+        self.__ennemies: list[Ennemie] = self.__split_ennemies() # sépare les ennemies de façon équitable sur plusieurs lignes
 
 
     def event(self) -> None:
@@ -62,6 +62,28 @@ class Jeu:
         self.__vaisseau.afficher_vaisseau()
 
 
+        for ennemie in self.__ennemies:
+
+            ennemie.afficher_ennemie()
+
+
+    def __split_ennemies(self) -> list[Ennemie]:
+        """
+        Sépare les ennemies sur la carte en une grille de lignes * colonnes
+        :return:
+        """
+        ennemies = []
+
+
+        # Création des 50 instances
+        for ligne in range(lignes):  # x lignes
+            for colonne in range(colonnes):  # x colonnes
+                x = colonne * espacement_collone + rayon_ennemie + 5
+                y = ligne * espacement_ligne + rayon_ennemie + 5
+                ennemies.append(Ennemie(screen, x, y, rayon_ennemie))
+
+        return ennemies
+
 
 jeu = Jeu() # initialisation du jeu
 
@@ -76,6 +98,6 @@ while running:
     # flip() affiche le contenue à l'écran
     pygame.display.flip()
 
-    clock.tick(25)  # 25 fps
+    clock.tick(FPS)  # 25 fps
 
 pygame.quit()
