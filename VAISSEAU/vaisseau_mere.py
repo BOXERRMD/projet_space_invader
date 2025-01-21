@@ -1,5 +1,6 @@
 import pygame
 from types_perso import Coordonnees
+from information_jeu import window_longueur, window_largeur
 
 
 """
@@ -53,5 +54,7 @@ class Vaisseau:
         :param new_vitesse: la vitesse du vaisseau mère
         :return: None
         """
+        if self.__x + new_vitesse + self.__longueur > window_longueur or self.__x + new_vitesse < 0:
+            return
 
         self.__x += new_vitesse
