@@ -27,6 +27,12 @@ class Vaisseau:
         self.__largeur: int = 25
 
         self.__screen: pygame.Surface = screen
+        
+        self.__vie: int = 1 # sa vie avant de mourir
+        
+        
+    def est_en_vie(self) -> bool:
+        return self.__vie <= 0
 
 
 
