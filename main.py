@@ -58,7 +58,7 @@ class Jeu:
                     self.__vaisseau.vitesse = vaisseau_vitesse
 
                 elif touche == ' ': # si la barre espace est activé
-                    self.__vaisseau.tirer()
+                    self.__tires.append(self.__vaisseau.tirer())
 
                 else: # si on ne bouge pas le vaisseau mère, on met sa vitesse à 0
                     self.__vaisseau.vitesse = 0

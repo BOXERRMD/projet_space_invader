@@ -5,10 +5,11 @@ from types_perso import Coordonnees
 
 from typing import Union, TypeVar, TYPE_CHECKING
 
-if TYPE_CHECKING: # permet une importation non circulaire des modules
+if TYPE_CHECKING: # permet une importation non circulaire des modules mais uniquement sous la forme d'un type !!!
     from VAISSEAU.vaisseau_mere import Vaisseau
     from ENNEMIES.ennemies_vaisseau_mere import Ennemie
 
+    type_vaisseau = Vaisseau
     Tire_appartenance = TypeVar("Tire_appartenance", type(Vaisseau), type(Ennemie), None)
 
 """
@@ -58,8 +59,8 @@ class Tire:
         :param objet: l'objet d'ou il faut vérifier la collision
         :return: Renvoie True si le tir à toucher sa cible
         """
-        if self.__rect.colliderect(objet):  # si les rectangles se chevauche
-            if isinstance(objet, Vaisseau):
+        if self.__rect.colliderect(objet.rect):  # si les rectangles se chevauche
+            if isinstance(objet, Vaisseau): # BLOCAGE CAR LE TYPE N'EST PAS RECONNU = CHANGER LA MANI7RE DE RECONNAITRE LES TIRES (par des str par exemple)
                 objet.vie -= 1
                 return True
 

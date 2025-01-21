@@ -25,15 +25,13 @@ class Vaisseau:
         :param vitesse: la vitesse du vaisseau
         :param screen: la surface ou dessiner
         """
-        self.__x: Coordonnees = x
-        self.__y: Coordonnees = y
 
-        self.__longueur: int = 25
-        self.__largeur: int = 25
+        self.__rect = pygame.Rect(x, y, 25, 25)
 
         self.__screen: pygame.Surface = screen
         
         self.__vie: int = 1 # sa vie avant de mourir
+        self.__vitesse: int = 0
         
         
     def est_en_vie(self) -> bool:
@@ -44,14 +42,14 @@ class Vaisseau:
         Affiche le vaisseau à sa position x y
         :return: None
         """
-        pygame.draw.rect(self.__screen, 'white', rect=(self.__x, self.__y, self.__longueur, self.__largeur))
+        pygame.draw.rect(self.__screen, 'white', rect=self.__rect)
 
     def tirer(self) -> Tire:
         """
         Tire un laser au dessus du vaisseau
         :return: Un tire appartanant au vaisseau
         """
-        return Tire(self.__screen, x=self.__x+self.__longueur/2, y=self.__y, longueur_tire=10, direction_tire=-10, color=(125, 20, 99), appartient_a=Vaisseau)
+        return Tire(self.__screen, x=self.__rect.center[0], y=self.__rect.y, longueur_tire=10, direction_tire=-10, color=(125, 20, 99), appartient_a=Vaisseau)
 
     @property
     def vitesse(self) -> int:
@@ -59,7 +57,7 @@ class Vaisseau:
         Renvoie la vitesse du vaisseau
         :return: la vitesse du vaisseau mère
         """
-        return self.__x
+        return self.__vitesse
 
     @vitesse.setter
     def vitesse(self, new_vitesse: int) -> None:
@@ -68,10 +66,10 @@ class Vaisseau:
         :param new_vitesse: la vitesse du vaisseau mère
         :return: None
         """
-        if self.__x + new_vitesse + self.__longueur > window_longueur or self.__x + new_vitesse < 0:
+        if self.__rect.x + new_vitesse + self.__rect.width > window_longueur or self.__rect.x + new_vitesse < 0:
             return
 
-        self.__x += new_vitesse
+        self.__rect.x += new_vitesse
 
     @property
     def x(self) -> Coordonnees:
@@ -79,7 +77,7 @@ class Vaisseau:
         Renvoie la coordonnée X du vaisseau
         :return:
         """
-        return self.__x
+        return self.__rect.x
 
     @property
     def y(self) -> Coordonnees:
@@ -87,7 +85,7 @@ class Vaisseau:
         Renvoie la coordonnée Y du vaisseau
         :return:
         """
-        return self.__y
+        return self.__rect.y
 
     @property
     def longueur(self) -> int:
@@ -95,7 +93,7 @@ class Vaisseau:
         Renvoie la longueur du vaisseau
         :return:
         """
-        return self.__longueur
+        return self.__rect.width
 
     @property
     def largeur(self) -> int:
@@ -103,7 +101,7 @@ class Vaisseau:
         Renvoie la largeur du vaisseau
         :return:
         """
-        return self.__largeur
+        return self.__rect.height
 
     @property
     def vie(self) -> int:
@@ -121,3 +119,11 @@ class Vaisseau:
         :return:
         """
         self.__vie = nouvelle_vie
+
+    @property
+    def rect(self) -> pygame.Rect:
+        """
+        Revoie le rectangle du vaisseau
+        :return:
+        """
+        return self.__rect
