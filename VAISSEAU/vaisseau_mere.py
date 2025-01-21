@@ -1,5 +1,5 @@
 import pygame
-from projet_space_invader.types_perso import Coordonnees
+from types_perso import Coordonnees
 
 
 """
