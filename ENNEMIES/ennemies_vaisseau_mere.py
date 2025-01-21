@@ -41,6 +41,12 @@ class Ennemie:
                                radius=self.__radius,
                                center=(self.__x, self.__y))
 
+    def tuer(self) -> None:
+        """
+        Tue l'ennemie
+        :return:
+        """
+        self.__vie = False
 
     @property
     def x(self) -> Coordonnees:
@@ -75,3 +81,11 @@ class Ennemie:
         :return: None
         """
         self.__x = définir_y
+
+    @property
+    def vie(self) -> bool:
+        """
+        Renvoie si l'ennemie est envie ou non
+        :return: True -> en vie     False -> mort
+        """
+        return self.__vie

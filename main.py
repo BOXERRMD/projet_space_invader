@@ -1,6 +1,7 @@
 import pygame
 from VAISSEAU.vaisseau_mere import Vaisseau # import du vaisseau mère
 from ENNEMIES.ennemies_vaisseau_mere import Ennemie # import des ennemies
+from TIRES.tire import Tire
 
 from information_jeu import * # toutes les informations du jeu
 """
@@ -26,6 +27,8 @@ class Jeu:
 
         self.__ennemies: list[Ennemie] = self.__split_ennemies() # sépare les ennemies de façon équitable sur plusieurs lignes
 
+        self.__tires: list[Tire] = [] # La liste de tire en cours dans le jeu
+
         self.__event_attente_ennemie = pygame.event.custom_type()
         pygame.time.set_timer(self.__event_attente_ennemie, 900)
         self.__event_count: int = 0
@@ -46,11 +49,16 @@ class Jeu:
             """
             if 'text' in event.dict: # regarde si la clée "text" est dans le dict des données de l'event
 
-                if event.dict['text'] == 'q': # si la touche Q est activé
+                touche: str = event.dict['text']
+
+                if touche == 'q': # si la touche Q est activé
                     self.__vaisseau.vitesse = -vaisseau_vitesse
 
-                elif event.dict['text'] == 'd': # si la touche D est activé
+                elif touche == 'd': # si la touche D est activé
                     self.__vaisseau.vitesse = vaisseau_vitesse
+
+                elif touche == ' ': # si la barre espace est activé
+                    self.__vaisseau.tirer()
 
                 else: # si on ne bouge pas le vaisseau mère, on met sa vitesse à 0
                     self.__vaisseau.vitesse = 0
@@ -78,11 +86,16 @@ class Jeu:
         Affiche tous le contenue du jeu frame par frame
         :return:
         """
+        new_tire = []
+        for tire in self.__tires:
+            if not tire.afficher_tire(self.__vaisseau, self.__ennemies): # gère les collisions dans la class tire
+                new_tire.append(tire)
+
+        self.__tires = new_tire
+
         self.__vaisseau.afficher_vaisseau()
 
-
         for ennemie in self.__ennemies:
-
             ennemie.afficher_ennemie()
 
 
@@ -98,7 +111,7 @@ class Jeu:
         for ligne in range(lignes):  # x lignes
             for colonne in range(colonnes):  # x colonnes
                 x = colonne * espacement_collone + rayon_ennemie + 5
-                y = ligne * espacement_ligne + rayon_ennemie + 5
+                y = ligne * espacement_ligne + rayon_ennemie + 40
                 ennemies.append(Ennemie(screen, x, y, rayon_ennemie))
 
         return ennemies
@@ -117,6 +130,6 @@ while running:
     # flip() affiche le contenue à l'écran
     pygame.display.flip()
 
-    clock.tick(FPS)  # 25 fps
+    clock.tick(FPS)  # fps
 
 pygame.quit()
