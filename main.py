@@ -23,7 +23,7 @@ class Jeu:
         """
         Initialisation du jeu
         """
-        self.__vaisseau: Vaisseau = Vaisseau(vaisseau_taille_longueur, vaisseau_taille_largeur, screen)
+        self.__vaisseau: Vaisseau = Vaisseau(vaisseau_posX, vaisseau_posY, screen)
         self.__ennemies: list[Ennemie] = [Ennemie(screen) for _ in range(50)]
 
 
@@ -42,7 +42,6 @@ class Jeu:
             if 'text' in event.dict: # regarde si la clée "text" est dans le dict des données de l'event
 
                 if event.dict['text'] == 'q': # si la touche Q est activé
-                    print("ok")
                     self.__vaisseau.vitesse = -5
 
                 elif event.dict['text'] == 'd': # si la touche D est activé
