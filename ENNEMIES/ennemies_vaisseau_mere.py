@@ -24,7 +24,10 @@ class Ennemie:
 
         self.__x: Coordonnees = x
         self.__y: Coordonnees = y
-        self.__radius = radius
+
+        self.__radius = radius # le rayon de la shère
+
+        self.__vie: bool = True # si l'ennemeie est en vie ou non
 
 
     def afficher_ennemie(self) -> None:
@@ -32,7 +35,11 @@ class Ennemie:
         affiche l'ennemie à sa position x,y
         :return: None
         """
-        pygame.draw.circle(surface=self.__screen, color=(70, 58, 255), radius=self.__radius, center=(self.__x, self.__y))
+        if self.__vie:
+            pygame.draw.circle(surface=self.__screen,
+                               color=(70, 58, 255),
+                               radius=self.__radius,
+                               center=(self.__x, self.__y))
 
 
     @property
@@ -44,13 +51,13 @@ class Ennemie:
         return self.__x
 
     @x.setter
-    def x(self, ajouter_a_x: Coordonnees):
+    def x(self, définir_x: Coordonnees):
         """
-        Ajoute une valeur à X
+        définit une valeur à X
         :param ajouter_a_x: le nombre à ajouter à la coordonnée X
         :return: None
         """
-        self.__x += ajouter_a_x
+        self.__x = définir_x
 
     @property
     def y(self) -> Coordonnees:
@@ -61,10 +68,10 @@ class Ennemie:
         return self.__y
 
     @y.setter
-    def y(self, ajouter_a_y: Coordonnees):
+    def y(self, définir_y: Coordonnees):
         """
-        Ajoute une valeur à Y
+        définit une valeur à Y
         :param ajouter_a_y: le nombre à ajouter à la coordonnée Y
         :return: None
         """
-        self.__x += ajouter_a_y
+        self.__x = définir_y

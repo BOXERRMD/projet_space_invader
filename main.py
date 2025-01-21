@@ -26,6 +26,11 @@ class Jeu:
 
         self.__ennemies: list[Ennemie] = self.__split_ennemies() # sépare les ennemies de façon équitable sur plusieurs lignes
 
+        self.__event_attente_ennemie = pygame.event.custom_type()
+        pygame.time.set_timer(self.__event_attente_ennemie, 900)
+        self.__event_count: int = 0
+        self.__event_direction: int = 5
+
 
     def event(self) -> None:
         """
@@ -42,16 +47,30 @@ class Jeu:
             if 'text' in event.dict: # regarde si la clée "text" est dans le dict des données de l'event
 
                 if event.dict['text'] == 'q': # si la touche Q est activé
-                    self.__vaisseau.vitesse = -5
+                    self.__vaisseau.vitesse = -vaisseau_vitesse
 
                 elif event.dict['text'] == 'd': # si la touche D est activé
-                    self.__vaisseau.vitesse = 5
+                    self.__vaisseau.vitesse = vaisseau_vitesse
 
                 else: # si on ne bouge pas le vaisseau mère, on met sa vitesse à 0
                     self.__vaisseau.vitesse = 0
 
+            if event.type == self.__event_attente_ennemie:
+
+                for ennemie in self.__ennemies:
+                    ennemie.x = ennemie.x + self.__event_direction
+                self.__event_count += 1
+
+                if self.__event_count > 5:
+                    self.__event_direction *= -1
+                    self.__event_count = 0
+
+
+
+
             if event.type == pygame.QUIT:
                 running = False
+
 
 
     def affichage(self) -> None:
