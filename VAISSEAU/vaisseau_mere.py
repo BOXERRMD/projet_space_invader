@@ -1,7 +1,7 @@
 
 import pygame
 from types_perso import Coordonnees
-from information_jeu import window_longueur
+from information_jeu import window_longueur, tire_vaisseau
 
 from TIRES.tire import Tire
 
@@ -49,7 +49,7 @@ class Vaisseau:
         Tire un laser au dessus du vaisseau
         :return: Un tire appartanant au vaisseau
         """
-        return Tire(self.__screen, x=self.__rect.center[0], y=self.__rect.y, longueur_tire=10, direction_tire=-10, color=(125, 20, 99), appartient_a=Vaisseau)
+        return Tire(self.__screen, x=self.__rect.center[0], y=self.__rect.y, longueur_tire=10, direction_tire=-10, color=(125, 20, 99), appartient_a=tire_vaisseau)
 
     @property
     def vitesse(self) -> int:
@@ -127,3 +127,11 @@ class Vaisseau:
         :return:
         """
         return self.__rect
+
+    @property
+    def tire(self) -> str:
+        """
+        Renvoie à qui appartien le tire
+        :return:
+        """
+        return tire_vaisseau

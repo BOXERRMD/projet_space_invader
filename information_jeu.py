@@ -14,6 +14,7 @@ vaisseau_posX: float = window_longueur/2
 vaisseau_posY: float = window_largeur - 30
 
 vaisseau_vitesse: int = 10
+tire_vaisseau: str = "vaisseau"
 
 
 # ennemies
@@ -25,3 +26,4 @@ espacement_collone: float = window_longueur / colonnes
 
 lignes: int = 5
 espacement_ligne: int = rayon_ennemie*2 + 10
+tire_ennemie: str = "ennemie"

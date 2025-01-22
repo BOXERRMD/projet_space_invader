@@ -1,6 +1,7 @@
 import pygame
 
 from types_perso import Coordonnees
+from information_jeu import tire_ennemie
 
 
 
@@ -48,6 +49,13 @@ class Ennemie:
         """
         self.__vie = False
 
+    def tirer(self):
+        """
+        L'ennemie tire
+        :return:
+        """
+        pass
+
     @property
     def x(self) -> Coordonnees:
         """
@@ -89,3 +97,11 @@ class Ennemie:
         :return: True -> en vie     False -> mort
         """
         return self.__vie
+
+    @property
+    def tire(self) -> str:
+        """
+        Renvoie à qui appartien le tire
+        :return:
+        """
+        return tire_ennemie

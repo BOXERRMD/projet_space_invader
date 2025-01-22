@@ -1,16 +1,15 @@
 from __future__ import annotations
 import pygame
 
+from information_jeu import tire_vaisseau, tire_ennemie
 from types_perso import Coordonnees
 
-from typing import Union, TypeVar, TYPE_CHECKING
+from typing import Union, TYPE_CHECKING
 
 if TYPE_CHECKING: # permet une importation non circulaire des modules mais uniquement sous la forme d'un type !!!
     from VAISSEAU.vaisseau_mere import Vaisseau
     from ENNEMIES.ennemies_vaisseau_mere import Ennemie
 
-    type_vaisseau = Vaisseau
-    Tire_appartenance = TypeVar("Tire_appartenance", type(Vaisseau), type(Ennemie), None)
 
 """
 Comporte une class permettant de gérer les tires des ennemies et celui du joueurs.
@@ -19,7 +18,7 @@ Comporte une class permettant de gérer les tires des ennemies et celui du joueu
 
 class Tire:
 
-    def __init__(self, screen: pygame.Surface, x: Coordonnees, y: Coordonnees, longueur_tire: int, direction_tire: Coordonnees, color: tuple[int, int, int], appartient_a: Tire_appartenance = None, largeur_tire: int = 1):
+    def __init__(self, screen: pygame.Surface, x: Coordonnees, y: Coordonnees, longueur_tire: int, direction_tire: Coordonnees, color: tuple[int, int, int], appartient_a: Union[tire_vaisseau, tire_ennemie] = None, largeur_tire: int = 1):
         """
         Initialise un tire
         :param screen: la surface ou dessiner
@@ -31,10 +30,11 @@ class Tire:
         """
 
         self.__screen: pygame.Surface = screen
-        self.__color: tuple[int] = color
+        self.__color: tuple[int, int, int] = color
         self.__rect: pygame.Rect = pygame.Rect(x, y, longueur_tire, largeur_tire)
+        self.__direction_tire: Coordonnees = direction_tire
 
-        self.__appartien_a: Tire_appartenance = appartient_a # à qui appartient le tire (sera le type de la class à qui le tire appartient)
+        self.__appartien_a: Union[tire_ennemie, tire_vaisseau] = appartient_a # à qui appartient le tire (sera le type de la class à qui le tire appartient)
 
     def afficher_tire(self, vaisseau_mere: Vaisseau, ennemies: list[Ennemie]) -> bool:
         """
@@ -60,11 +60,11 @@ class Tire:
         :return: Renvoie True si le tir à toucher sa cible
         """
         if self.__rect.colliderect(objet.rect):  # si les rectangles se chevauche
-            if isinstance(objet, Vaisseau): # BLOCAGE CAR LE TYPE N'EST PAS RECONNU = CHANGER LA MANI7RE DE RECONNAITRE LES TIRES (par des str par exemple)
+            if objet.tire == tire_vaisseau: # BLOCAGE CAR LE TYPE N'EST PAS RECONNU = CHANGER LA MANI7RE DE RECONNAITRE LES TIRES (par des str par exemple)
                 objet.vie -= 1
                 return True
 
-            elif isinstance(objet, Ennemie):
+            elif objet.tire == tire_ennemie:
                 objet.tuer()
                 return True
 
