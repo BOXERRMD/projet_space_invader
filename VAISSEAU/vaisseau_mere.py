@@ -49,7 +49,7 @@ class Vaisseau:
         Tire un laser au dessus du vaisseau
         :return: Un tire appartanant au vaisseau
         """
-        return Tire(self.__screen, x=self.__rect.center[0], y=self.__rect.y, longueur_tire=10, direction_tire=-10, color=(125, 20, 99), appartient_a=tire_vaisseau)
+        return Tire(self.__screen, x=self.__rect.center[0]+50, y=self.__rect.y+50, longueur_tire=10, direction_tire=-10, color=(125, 20, 99), appartient_a=tire_vaisseau)
 
     @property
     def vitesse(self) -> int:

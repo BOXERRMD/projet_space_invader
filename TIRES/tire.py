@@ -31,29 +31,23 @@ class Tire:
 
         self.__screen: pygame.Surface = screen
         self.__color: tuple[int, int, int] = color
-        self.__rect: pygame.Rect = pygame.Rect(x, y, longueur_tire, largeur_tire)
+        self.__rect: pygame.Rect = pygame.Rect(x, y, largeur_tire, longueur_tire)
         self.__direction_tire: Coordonnees = direction_tire
 
         self.__appartien_a: Union[tire_ennemie, tire_vaisseau] = appartient_a # à qui appartient le tire (sera le type de la class à qui le tire appartient)
 
-    def afficher_tire(self, vaisseau_mere: Vaisseau, ennemies: list[Ennemie]) -> bool:
+    def afficher_tire(self):
         """
         Affiche le tir à l'écran
         :param vaisseau_mere: Le vaiseau mère actuellement en jeu
         :param ennemies: La liste des ennemies en jeu
-        :return: True si le tire a touché, False sinon
+        :return:
         """
-        if self.__collision(vaisseau_mere):
-            return True
-
-        for ennemie in ennemies:
-            if self.__collision(ennemie):
-                return True
 
         pygame.draw.rect(self.__screen, color=self.__color, rect=self.__rect)
-        return False
 
-    def __collision(self, objet: Union[Vaisseau, Ennemie]) -> bool:
+
+    def collision(self, objet: Union[Vaisseau, Ennemie]) -> bool:
         """
         gère la collision des objets avec le tire en cours
         :param objet: l'objet d'ou il faut vérifier la collision
@@ -74,17 +68,18 @@ class Tire:
 
 
     @property
-    def start_coordonnees(self) -> tuple[Coordonnees, Coordonnees]:
+    def y(self) -> Coordonnees:
         """
-        Renvoie un tuple de coordonnées du départ du trait
+        Renvoie la coordonnée Y du tire
         :return:
         """
-        return self.__start_pose
+        return self.__rect.y
 
-    @property
-    def end_coordonnees(self) -> tuple[Coordonnees, Coordonnees]:
+    @y.setter
+    def y(self, nouvelle_coordonnee_Y: Coordonnees):
         """
-        Renvoie un tuple de coordonnées de la fin du trait
+        Met une nouvelle coordonnée à Y
+        :param nouvelle_coordonnee_Y: la nouvelle coordonnée qui remplace celle existante
         :return:
         """
-        return self.__end_pose
+        self.__rect.y = nouvelle_coordonnee_Y

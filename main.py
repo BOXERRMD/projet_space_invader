@@ -34,6 +34,9 @@ class Jeu:
         self.__event_count: int = 0
         self.__event_direction: int = 5
 
+        self.__event_attente_tires = pygame.event.custom_type()
+        pygame.time.set_timer(self.__event_attente_tires, 100)
+
 
     def event(self) -> None:
         """
@@ -69,9 +72,18 @@ class Jeu:
                     ennemie.x = ennemie.x + self.__event_direction
                 self.__event_count += 1
 
-                if self.__event_count > 5:
+                if self.__event_count > 3:
                     self.__event_direction *= -1
                     self.__event_count = 0
+
+            if event.type == self.__event_attente_tires:
+
+                for tire in self.__tires:
+
+                    for ennemie in self.__ennemies:
+                        if not tire.collision(ennemie):
+                            tire.y = tire.y - 1
+
 
 
 
@@ -86,17 +98,14 @@ class Jeu:
         Affiche tous le contenue du jeu frame par frame
         :return:
         """
-        new_tire = []
-        for tire in self.__tires:
-            if not tire.afficher_tire(self.__vaisseau, self.__ennemies): # gère les collisions dans la class tire
-                new_tire.append(tire)
-
-        self.__tires = new_tire
 
         self.__vaisseau.afficher_vaisseau()
 
         for ennemie in self.__ennemies:
             ennemie.afficher_ennemie()
+
+        for tire in self.__tires:
+            tire.afficher_tire()
 
 
     def __split_ennemies(self) -> list[Ennemie]:
@@ -110,9 +119,9 @@ class Jeu:
         # Création des 50 instances
         for ligne in range(lignes):  # x lignes
             for colonne in range(colonnes):  # x colonnes
-                x = colonne * espacement_collone + rayon_ennemie + 5
+                x = colonne * espacement_collone + rayon_ennemie
                 y = ligne * espacement_ligne + rayon_ennemie + 40
-                ennemies.append(Ennemie(screen, x, y, rayon_ennemie))
+                ennemies.append(Ennemie(screen, x, y))
 
         return ennemies
 
