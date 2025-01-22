@@ -77,12 +77,18 @@ class Jeu:
                     self.__event_count = 0
 
             if event.type == self.__event_attente_tires:
-
-                for tire in self.__tires:
-
+                liste_tirs_touche = []
+                for tire in range(len(self.__tires)):
                     for ennemie in self.__ennemies:
-                        if not tire.collision(ennemie):
-                            tire.y = tire.y - 1
+                        if not self.__tires[tire].collision(ennemie):
+                            self.__tires[tire].y = self.__tires[tire].y - 1
+                        else:
+                            liste_tirs_touche.append(tire)
+                            
+                for tire2 in range(len(self.__tires)):
+                    if tire2 in liste_tirs_touche:
+                        self.__tires.pop(tire2)
+                                   
 
 
 

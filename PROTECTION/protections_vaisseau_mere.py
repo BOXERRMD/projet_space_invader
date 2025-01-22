@@ -9,7 +9,7 @@ Contient :
     1 class : Protection
 """
 
-class Protection:
+class Protection: ##utiliser classe rect de pygame
 
     def __init__(self, screen: pygame.Surface):
         """

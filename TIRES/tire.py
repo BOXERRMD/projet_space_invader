@@ -54,11 +54,11 @@ class Tire:
         :return: Renvoie True si le tir à toucher sa cible
         """
         if self.__rect.colliderect(objet.rect):  # si les rectangles se chevauche
-            if objet.tire == tire_vaisseau: # BLOCAGE CAR LE TYPE N'EST PAS RECONNU = CHANGER LA MANI7RE DE RECONNAITRE LES TIRES (par des str par exemple)
+            if objet.tire == tire_vaisseau: ##Tir vers le Vaisseau mère
                 objet.vie -= 1
                 return True
 
-            elif objet.tire == tire_ennemie:
+            elif objet.tire == tire_ennemie: ##Tir vers l'ennemi
                 objet.tuer()
                 return True
 
