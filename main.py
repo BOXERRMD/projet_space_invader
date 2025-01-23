@@ -77,17 +77,20 @@ class Jeu:
                     self.__event_count = 0
 
             if event.type == self.__event_attente_tires:
+                
                 liste_tirs_touche = []
-                for tire in range(len(self.__tires)):
-                    for ennemie in self.__ennemies:
-                        if not self.__tires[tire].collision(ennemie):
-                            self.__tires[tire].y = self.__tires[tire].y - 1
+                for tire in range(len(self.__tires)): #on itère sur tous les tirs en cours (A REMPLACER PAR UN SEUL TIR)
+                    
+                    for ennemie in self.__ennemies: # on itère sur chaque ennemie
+                        
+                        if not self.__tires[tire].collision(ennemie): # s'il n'y a pas eu de collision
+                            self.__tires[tire].y = self.__tires[tire].y - 1 # on fait avancer le tir
                         else:
-                            liste_tirs_touche.append(tire)
+                            liste_tirs_touche.append(tire) # sinon on l'ajoute à la liste des tirs à retirer pour la prochaine frame
                             
-                for tire2 in range(len(self.__tires)):
-                    if tire2 in liste_tirs_touche:
-                        self.__tires.pop(tire2)
+                for tire2 in range(len(self.__tires)): # on iter sur les tirs
+                    if tire2 in liste_tirs_touche: # s'il est dans les tirs à retirer
+                        self.__tires.pop(tire2) # on l'enlève de la liste des tirs en cours
                                    
 
 
