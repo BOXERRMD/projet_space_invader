@@ -68,7 +68,7 @@ class Tire:
         if self.y < 0:  # si le tire sort de la limite du jeu côté ennemie
             return True
 
-        elif self.y > window_largeur:
+        elif self.y > window_largeur: # si le tire sort de la limite du jeu côté joueur
             return True
 
 
