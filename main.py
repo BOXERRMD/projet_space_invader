@@ -4,6 +4,8 @@ from ENNEMIES.ennemies_vaisseau_mere import Ennemie # import des ennemies
 from TIRES.tire import Tire
 
 from information_jeu import * # toutes les informations du jeu
+
+from typing import Union
 """
 Information du jeu trouvable dans information_jeu.py
 """
@@ -27,7 +29,7 @@ class Jeu:
 
         self.__ennemies: list[Ennemie] = self.__split_ennemies() # sépare les ennemies de façon équitable sur plusieurs lignes
 
-        self.__tires: list[Tire] = [] # La liste de tire en cours dans le jeu
+        self.__tire: Union[Tire, None] = None # le tir en cour
 
         self.__event_attente_ennemie = pygame.event.custom_type()
         pygame.time.set_timer(self.__event_attente_ennemie, 900)
@@ -61,7 +63,8 @@ class Jeu:
                     self.__vaisseau.vitesse = vaisseau_vitesse
 
                 elif touche == ' ': # si la barre espace est activé
-                    self.__tires.append(self.__vaisseau.tirer())
+                    if self.__tire is not None:
+                        self.__tire = self.__vaisseau.tirer()
 
                 else: # si on ne bouge pas le vaisseau mère, on met sa vitesse à 0
                     self.__vaisseau.vitesse = 0
@@ -78,20 +81,10 @@ class Jeu:
 
             if event.type == self.__event_attente_tires:
                 
-                liste_tirs_touche = []
-                for tire in range(len(self.__tires)): #on itère sur tous les tirs en cours (A REMPLACER PAR UN SEUL TIR)
-                    
-                    for ennemie in self.__ennemies: # on itère sur chaque ennemie
-                        
-                        if not self.__tires[tire].collision(ennemie): # s'il n'y a pas eu de collision
-                            self.__tires[tire].y = self.__tires[tire].y - 1 # on fait avancer le tir
-                        else:
-                            liste_tirs_touche.append(tire) # sinon on l'ajoute à la liste des tirs à retirer pour la prochaine frame
-                            
-                for tire2 in range(len(self.__tires)): # on iter sur les tirs
-                    if tire2 in liste_tirs_touche: # s'il est dans les tirs à retirer
-                        self.__tires.pop(tire2) # on l'enlève de la liste des tirs en cours
-                                   
+                for ennemie in self.__ennemies:
+
+                       if self.__tire is not None and self.__tire.collision(ennemie):
+                           self.__tire = None
 
 
 
@@ -113,8 +106,8 @@ class Jeu:
         for ennemie in self.__ennemies:
             ennemie.afficher_ennemie()
 
-        for tire in self.__tires:
-            tire.afficher_tire()
+        if self.__tire is not None:
+            self.__tire.afficher_tire()
 
 
     def __split_ennemies(self) -> list[Ennemie]:
