@@ -1,7 +1,7 @@
 from __future__ import annotations
 import pygame
 
-from information_jeu import tire_vaisseau, tire_ennemie
+from information_jeu import tire_vaisseau, tire_ennemie, window_largeur
 from types_perso import Coordonnees
 
 from typing import Union, TYPE_CHECKING
@@ -64,6 +64,12 @@ class Tire:
 
             else:
                 return False
+
+        if self.y < 0:  # si le tire sort de la limite du jeu côté ennemie
+            return True
+
+        elif self.y > window_largeur:
+            return True
 
 
 

@@ -63,7 +63,8 @@ class Jeu:
                     self.__vaisseau.vitesse = vaisseau_vitesse
 
                 elif touche == ' ': # si la barre espace est activé
-                    if self.__tire is not None:
+                    print(self.__tire)
+                    if self.__tire is None:
                         self.__tire = self.__vaisseau.tirer()
 
                 else: # si on ne bouge pas le vaisseau mère, on met sa vitesse à 0
@@ -81,10 +82,14 @@ class Jeu:
 
             if event.type == self.__event_attente_tires:
                 
-                for ennemie in self.__ennemies:
+                for ennemie in self.__ennemies: # itère sur tous les ennemies
 
-                       if self.__tire is not None and self.__tire.collision(ennemie):
-                           self.__tire = None
+                    if self.__tire is not None and self.__tire.collision(ennemie): # si il existe un tir et qu'il y a une collision (l'affichage de l'ennemie est désactivé dans self.__tire.collision
+                        self.__tire = None # on retire le tire
+                    else: # sinon
+                        if self.__tire is not None: # s' il existe un tire
+                            self.__tire.y = self.__tire.y - 1 # on le fait bouger
+
 
 
 
