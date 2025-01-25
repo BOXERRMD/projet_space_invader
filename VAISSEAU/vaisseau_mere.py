@@ -1,5 +1,6 @@
 
 import pygame
+from os import path, getcwd
 from types_perso import Coordonnees
 from information_jeu import window_longueur, tire_vaisseau
 
@@ -17,7 +18,7 @@ Contient :
 
 class Vaisseau:
 
-    def __init__(self, x: Coordonnees, y: Coordonnees, screen: pygame.Surface, vitesse: int = 5):
+    def __init__(self, x: Coordonnees, y: Coordonnees, screen: pygame.Surface):
         """
         Initialisation du vaisseau mère
         :param x: la coordonnée x du vaisseau
@@ -26,12 +27,15 @@ class Vaisseau:
         :param screen: la surface ou dessiner
         """
 
-        self.__rect = pygame.Rect(x, y, 25, 25)
+        self.__rect = pygame.Rect(x, y, 26, 16)
 
         self.__screen: pygame.Surface = screen
         
         self.__vie: int = 1 # sa vie avant de mourir
         self.__vitesse: int = 0
+
+        self.__asset_vaisseau = pygame.image.load(path.join(getcwd(), "VAISSEAU\Assets\space__0006_Player.png"))
+        self.__screen.convert_alpha()
         
         
     def est_en_vie(self) -> bool:
@@ -42,14 +46,16 @@ class Vaisseau:
         Affiche le vaisseau à sa position x y
         :return: None
         """
-        pygame.draw.rect(self.__screen, 'white', rect=self.__rect)
+        self.__screen.blit(self.__asset_vaisseau, self.__rect)
+        #pygame.draw.rect(self.__screen, 'white', rect=self.__rect)
 
     def tirer(self) -> Tire:
         """
         Tire un laser au dessus du vaisseau
         :return: Un tire appartanant au vaisseau
         """
-        return Tire(self.__screen, x=self.__rect.center[0], y=self.__rect.y, longueur_tire=10, direction_tire=-10, color=(125, 20, 99), appartient_a=tire_vaisseau)
+        largeur_tire = 2
+        return Tire(self.__screen, x=self.__rect.center[0] - largeur_tire//2, y=self.__rect.y, longueur_tire=10, direction_tire=-10, color=(125, 20, 99), appartient_a=tire_vaisseau, largeur_tire=largeur_tire)
 
     @property
     def vitesse(self) -> int:

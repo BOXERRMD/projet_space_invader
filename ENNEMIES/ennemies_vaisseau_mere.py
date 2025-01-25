@@ -1,4 +1,5 @@
 import pygame
+from os import path, getcwd
 
 from types_perso import Coordonnees
 from information_jeu import tire_ennemie
@@ -12,6 +13,7 @@ Contient :
 
     1 class : Ennemie
 """
+ennemie_mort = pygame.image.load(path.join(getcwd(), "ENNEMIES\Assets\space__0009_EnemyExplosion.png"))
 
 class Ennemie:
 
@@ -43,7 +45,9 @@ class Ennemie:
         Tue l'ennemie
         :return:
         """
+        self.__screen.blit(ennemie_mort, self.__rect)
         self.__vie = False
+
 
     def tirer(self):
         """

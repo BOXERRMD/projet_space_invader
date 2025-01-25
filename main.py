@@ -63,7 +63,6 @@ class Jeu:
                     self.__vaisseau.vitesse = vaisseau_vitesse
 
                 elif touche == ' ': # si la barre espace est activé
-                    print(self.__tire)
                     if self.__tire is None:
                         self.__tire = self.__vaisseau.tirer()
 
