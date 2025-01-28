@@ -67,14 +67,20 @@ class Jeu:
                     self.__vaisseau.vitesse = 0
 
             if event.type == self.__event_attente_ennemie:
-
-                for ennemie in self.__ennemies:
-                    ennemie.x = ennemie.x + self.__event_direction
-                self.__event_count += 1
-
+                
+                liste_ennemie = []
+                for ennemie in range(len(self.__ennemies)):
+                    if not self.__ennemies[ennemie].vie:
+                        liste_ennemie.append(ennemie)
+                    self.__ennemies[ennemie].x = self.__ennemies[ennemie].x + self.__event_direction ##TRANSFORMER EN LISTE POUR LES SUPPRIMER A LA MORT
+                self.__event_count += 1                            ##rajouter un "if ennemie.mort ou un truc du style"
+                                                                   ##mais tkt c'est facile
                 if self.__event_count > 3:
                     self.__event_direction *= -1
                     self.__event_count = 0
+                for ennemie2 in range(len(self.__ennemies)):
+                    if ennemie2 in liste_ennemie:
+                        self.__ennemies.pop(ennemie2)
 
             if event.type == self.__event_attente_tires:
                 
