@@ -73,17 +73,28 @@ class Jeu:
 
             if event.type == self.__event_attente_ennemie: # EVENT QUI FAIT BOUGER LES ENNEMIES
 
-                for ennemie in self.__ennemies:
-                    ennemie.x = ennemie.x + self.__event_direction
+                liste_ennemie = []
+                for ennemie in range(len(self.__ennemies)):
+                    if not self.__ennemies[ennemie].vie:
+                        liste_ennemie.append(ennemie)
+                    self.__ennemies[ennemie].x = self.__ennemies[
+                                                     ennemie].x + self.__event_direction  ##TRANSFORMER EN LISTE POUR LES SUPPRIMER A LA MORT
 
-                    if ennemie.vie and randint(0, 50) == 5: # tire aléatoire des ennemies
-                        self.__ennemies_tirs.append(ennemie.tirer())
+                    if self.__ennemies[ennemie].vie and randint(0, 50) == 5: # tire aléatoire des ennemies
+                        self.__ennemies_tirs.append(self.__ennemies[ennemie].tirer())
 
-                self.__event_count += 1
+                self.__event_count += 1  ##rajouter un "if ennemie.mort ou un truc du style"
 
+                ##mais tkt c'est facile
                 if self.__event_count > 3:
                     self.__event_direction *= -1
                     self.__event_count = 0
+
+                for ennemie2 in range(len(self.__ennemies)):
+                    if ennemie2 in liste_ennemie:
+                        self.__ennemies.pop(ennemie2)
+
+
 
             if event.type == self.__event_attente_tires: # EVENT QUI FAIT BOUGER LES TIRS
                 
