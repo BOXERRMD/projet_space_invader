@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 from VAISSEAU.vaisseau_mere import Vaisseau # import du vaisseau mère
 from ENNEMIES.ennemies_vaisseau_mere import Ennemie # import des ennemies
 from TIRES.tire import Tire
@@ -29,7 +30,8 @@ class Jeu:
 
         self.__ennemies: list[Ennemie] = self.__split_ennemies() # sépare les ennemies de façon équitable sur plusieurs lignes
 
-        self.__tire: Union[Tire, None] = None # le tir en cour
+        self.__tir: Union[Tire, None] = None # le tir en cour
+        self.__ennemies_tirs: list[Tire] = [] # la liste des tirs des ennemies
 
         self.__event_attente_ennemie = pygame.event.custom_type()
         pygame.time.set_timer(self.__event_attente_ennemie, 900)
@@ -63,32 +65,47 @@ class Jeu:
                     self.__vaisseau.vitesse = vaisseau_vitesse
 
                 elif touche == ' ': # si la barre espace est activé
-                    if self.__tire is None:
-                        self.__tire = self.__vaisseau.tirer()
+                    if self.__tir is None:
+                        self.__tir = self.__vaisseau.tirer()
 
                 else: # si on ne bouge pas le vaisseau mère, on met sa vitesse à 0
                     self.__vaisseau.vitesse = 0
 
-            if event.type == self.__event_attente_ennemie:
+            if event.type == self.__event_attente_ennemie: # EVENT QUI FAIT BOUGER LES ENNEMIES
 
                 for ennemie in self.__ennemies:
                     ennemie.x = ennemie.x + self.__event_direction
+
+                    if ennemie.vie and randint(0, 50) == 5: # tire aléatoire des ennemies
+                        self.__ennemies_tirs.append(ennemie.tirer())
+
                 self.__event_count += 1
 
                 if self.__event_count > 3:
                     self.__event_direction *= -1
                     self.__event_count = 0
 
-            if event.type == self.__event_attente_tires:
+            if event.type == self.__event_attente_tires: # EVENT QUI FAIT BOUGER LES TIRS
                 
                 for ennemie in self.__ennemies: # itère sur tous les ennemies
 
-                    if self.__tire is not None and self.__tire.collision(ennemie): # si il existe un tir et qu'il y a une collision (l'affichage de l'ennemie est désactivé dans self.__tire.collision
-                        self.__tire = None # on retire le tire
-                    else: # sinon
-                        if self.__tire is not None: # s' il existe un tire
-                            self.__tire.y = self.__tire.y - 1 # on le fait bouger
+                    if self.__tir is not None and self.__tir.collision(ennemie): # si il existe un tir et qu'il y a une collision (l'affichage de l'ennemie est désactivé dans self.__tire.collision
+                        self.__tir = None # on retire le tire
 
+                if self.__tir is not None: # s' il existe un tire
+                    self.__tir.y = self.__tir.y - 35 # on le fait bouger
+
+                new_tirs = []
+                for tir_ennemie in self.__ennemies_tirs: # iter sur tous les tirs des ennemies
+
+
+                    if tir_ennemie.collision(self.__vaisseau): # si il existe un tir et qu'il y a une collision (l'affichage de l'ennemie est désactivé dans self.__tire.collision
+                        pass # le vaisseau meurt
+                    else: # sinon
+                        tir_ennemie.y = tir_ennemie.y + 15
+                        new_tirs.append(tir_ennemie)
+
+                self.__ennemies_tirs = new_tirs.copy()
 
 
 
@@ -105,13 +122,16 @@ class Jeu:
         :return:
         """
 
+        if self.__tir is not None:
+            self.__tir.afficher_tire()
+
+        for tir in self.__ennemies_tirs:
+            tir.afficher_tire()
+
         self.__vaisseau.afficher_vaisseau()
 
         for ennemie in self.__ennemies:
             ennemie.afficher_ennemie()
-
-        if self.__tire is not None:
-            self.__tire.afficher_tire()
 
 
     def __split_ennemies(self) -> list[Ennemie]:
@@ -121,16 +141,35 @@ class Jeu:
         """
         ennemies = []
 
-
         # Création des 50 instances
         for ligne in range(lignes):  # x lignes
             for colonne in range(colonnes):  # x colonnes
                 x = colonne * espacement_collone + rayon_ennemie
                 y = ligne * espacement_ligne + rayon_ennemie + 40
-                ennemies.append(Ennemie(screen, x, y))
+                ennemies.append(Ennemie(screen, x, y, self.__select_animation_ennemie(ligne)))
 
         return ennemies
 
+    def __select_animation_ennemie(self, ligne: int) -> tuple[str, str]:
+        """
+        Sélectionne les 2 images d'animation pour la ligne en question
+        :param ligne: la ligne d'ennemie actuellement en création
+        :return:
+        """
+        annim_lignes = {
+            1: ('space__0004_C1.png', 'space__0005_C2.png'),
+            2: ('space__0002_B1.png', 'space__0003_B2.png'),
+            3: ('space__0000_A1.png', 'space__0001_A2.png')
+        }
+
+        if ligne >= 3:
+            return annim_lignes[3]
+
+        elif 2 >= ligne >= 1:
+            return annim_lignes[2]
+
+        else:
+            return annim_lignes[1]
 
 jeu = Jeu() # initialisation du jeu
 

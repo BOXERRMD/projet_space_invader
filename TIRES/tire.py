@@ -58,7 +58,7 @@ class Tire:
                 objet.vie -= 1
                 return True
 
-            elif objet.tire == tire_ennemie: ##Tir vers l'ennemi
+            elif objet.tire == tire_ennemie and objet.vie: ##Tir vers l'ennemi
                 objet.tuer()
                 return True
 

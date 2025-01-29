@@ -15,6 +15,7 @@ Contient :
 
     1 class : Vaisseau
 """
+asset_vaisseau = pygame.image.load(path.join(getcwd(), "VAISSEAU\Assets\space__0006_Player.png"))
 
 class Vaisseau:
 
@@ -33,9 +34,6 @@ class Vaisseau:
         
         self.__vie: int = 1 # sa vie avant de mourir
         self.__vitesse: int = 0
-
-        self.__asset_vaisseau = pygame.image.load(path.join(getcwd(), "VAISSEAU\Assets\space__0006_Player.png"))
-        self.__screen.convert_alpha()
         
         
     def est_en_vie(self) -> bool:
@@ -46,8 +44,7 @@ class Vaisseau:
         Affiche le vaisseau à sa position x y
         :return: None
         """
-        self.__screen.blit(self.__asset_vaisseau, self.__rect)
-        #pygame.draw.rect(self.__screen, 'white', rect=self.__rect)
+        self.__screen.blit(asset_vaisseau, self.__rect)
 
     def tirer(self) -> Tire:
         """
