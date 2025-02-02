@@ -2,6 +2,7 @@ import pygame
 from random import randint
 from VAISSEAU.vaisseau_mere import Vaisseau # import du vaisseau mère
 from ENNEMIES.ennemies_vaisseau_mere import Ennemie # import des ennemies
+from PROTECTION.protections_vaisseau_mere import Protection # import des protections
 from TIRES.tire import Tire
 
 from information_jeu import * # toutes les informations du jeu
@@ -40,6 +41,8 @@ class Jeu:
 
         self.__event_attente_tires = pygame.event.custom_type()
         pygame.time.set_timer(self.__event_attente_tires, 100)
+        
+        self.__protections = Protection.creer_protections(screen, nb_protections=4, y_position=370) # creer 3 protections avec la position horizontale
 
 
     def event(self) -> None:
@@ -102,19 +105,33 @@ class Jeu:
 
                     if self.__tir is not None and self.__tir.collision(ennemie): # si il existe un tir et qu'il y a une collision (l'affichage de l'ennemie est désactivé dans self.__tire.collision
                         self.__tir = None # on retire le tire
+                
+                # Gestion des collisions entre le tir du vaisseau et les protections
+                if self.__tir is not None:
+                    for protection in self.__protections:
+                        if protection.vie and self.__tir._Tire__rect.colliderect(protection.rect):
+                            protection.degats()  # La protection prend des dégâts
+                            self.__tir = None  # On retire le tir après la collision
+                            break  # Sortir de la boucle après une collision
 
                 if self.__tir is not None: # s' il existe un tire
                     self.__tir.y = self.__tir.y - 35 # on le fait bouger
 
                 new_tirs = []
                 for tir_ennemie in self.__ennemies_tirs: # iter sur tous les tirs des ennemies
-
-
-                    if tir_ennemie.collision(self.__vaisseau): # si il existe un tir et qu'il y a une collision (l'affichage de l'ennemie est désactivé dans self.__tire.collision
-                        pass # le vaisseau meurt
-                    else: # sinon
-                        tir_ennemie.y = tir_ennemie.y + 15
-                        new_tirs.append(tir_ennemie)
+                    collision_detectee = False
+                    
+                    for protection in self.__protections:
+                        if tir_ennemie._Tire__rect.colliderect(protection.rect) and protection.vie:
+                            protection.degats()  # La protection prend des dégâts
+                            collision_detectee = True  # Le tir s'arrête après avoir touché la protection
+                            break
+                    if not collision_detectee:
+                        if tir_ennemie.collision(self.__vaisseau): # si il existe un tir et qu'il y a une collision (l'affichage de l'ennemie est désactivé dans self.__tire.collision
+                            pass # le vaisseau meurt
+                        else: # sinon
+                            tir_ennemie.y = tir_ennemie.y + 15
+                            new_tirs.append(tir_ennemie)
 
                 self.__ennemies_tirs = new_tirs.copy()
 
@@ -143,6 +160,9 @@ class Jeu:
 
         for ennemie in self.__ennemies:
             ennemie.afficher_ennemie()
+        
+        for protection in self.__protections:
+            protection.afficher_protection()
 
 
     def __split_ennemies(self) -> list[Ennemie]:
