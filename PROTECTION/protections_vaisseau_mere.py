@@ -9,7 +9,7 @@ class Protection:
         :param y: position Y de la protection
         """
         self.__screen: pygame.Surface = screen
-        self.__rect = pygame.Rect(x, y, 100, 25)  # Largeur 100, hauteur 25
+        self.__rect = pygame.Rect(x, y, 50, 25)  # Largeur 100, hauteur 25
         self.__vie = 10  # 10 points de vie
 
     def afficher_protection(self) -> None:
