@@ -44,6 +44,7 @@ class Jeu:
         
         self.__protections = Protection.creer_protections(screen, nb_protections=4, y_position=370) # creer 3 protections avec la position horizontale
 
+        self.__tir_ennemie_aleatoire: int = 50
 
     def event(self) -> None:
         """
@@ -67,6 +68,9 @@ class Jeu:
                 elif touche == 'd': # si la touche D est activé
                     self.__vaisseau.vitesse = vaisseau_vitesse
 
+                elif touche == 'm':
+                    self.__tir_ennemie_aleatoire //= 2
+
                 elif touche == ' ': # si la barre espace est activé
                     if self.__tir is None:
                         self.__tir = self.__vaisseau.tirer()
@@ -83,7 +87,7 @@ class Jeu:
                     self.__ennemies[ennemie].x = self.__ennemies[
                                                      ennemie].x + self.__event_direction  ##TRANSFORMER EN LISTE POUR LES SUPPRIMER A LA MORT
 
-                    if self.__ennemies[ennemie].vie and randint(0, 50) == 5: # tire aléatoire des ennemies
+                    if self.__ennemies[ennemie].vie and randint(0, self.__tir_ennemie_aleatoire) == 0: # tire aléatoire des ennemies
                         self.__ennemies_tirs.append(self.__ennemies[ennemie].tirer())
 
                 self.__event_count += 1  ##rajouter un "if ennemie.mort ou un truc du style"

@@ -4,7 +4,7 @@ from os import path, getcwd
 from types_perso import Coordonnees
 from information_jeu import window_longueur, tire_vaisseau
 
-from TIRES.tire import Tire
+from TIRES.tire import Tire # Et la, c'est le drâme... ## fait quelque chose en rapport avec les tirs
 
 
 
