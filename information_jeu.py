@@ -21,7 +21,7 @@ tire_vaisseau: str = "vaisseau"
 
 rayon_ennemie: int = 14
 
-colonnes: int = 10
+colonnes: int = 1
 espacement_collone: float = window_longueur / colonnes
 
 lignes: int = 5

@@ -46,6 +46,8 @@ class Jeu:
 
         self.__tir_ennemie_aleatoire: int = 50
 
+        self.__texte_surface = pygame.font.Font(size=50)
+
     def event(self) -> None:
         """
         Gère la venue des évènement pygame
@@ -153,6 +155,9 @@ class Jeu:
         Affiche tous le contenue du jeu frame par frame
         :return:
         """
+        if len(self.__ennemies) == 0:
+            self.__victoire()
+            return
 
         if self.__tir is not None:
             self.__tir.afficher_tire()
@@ -167,6 +172,17 @@ class Jeu:
         
         for protection in self.__protections:
             protection.afficher_protection()
+
+    def __victoire(self):
+        """
+        Affiche un écran de fin si le joueur a gagné
+        :return:
+        """
+        texte = pygame.font.Font.render(self.__texte_surface, "VICTOIRE !", 1, (255,255,255))
+        r = texte.get_rect()
+        r.x = window_longueur/2 - texte.get_size()[0]
+        r.y = window_largeur/2
+        screen.blit(texte, r)
 
 
     def __split_ennemies(self) -> list[Ennemie]:
