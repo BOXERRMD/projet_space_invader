@@ -40,8 +40,12 @@ class Jeu:
 
         self.__event_attente_tires = pygame.event.custom_type()
         pygame.time.set_timer(self.__event_attente_tires, 100)
-
-
+        
+        self.score = 0 ##On initialise le score à 0 au début de la partie
+        self.score_font = pygame.font.Font('Fontscore.ttf',25) ##on défini la police d'écriture et la taille de l'affichage du score
+        self.score_position = [10,10] ##position du score
+    
+    
     def event(self) -> None:
         """
         Gère la venue des évènement pygame
@@ -93,6 +97,7 @@ class Jeu:
                 for ennemie2 in range(len(self.__ennemies)):
                     if ennemie2 in liste_ennemie:
                         self.__ennemies.pop(ennemie2)
+                        self.score += 10 ##ajoute 10 au score du joueur
 
 
 
@@ -143,7 +148,9 @@ class Jeu:
 
         for ennemie in self.__ennemies:
             ennemie.afficher_ennemie()
-
+        
+        self.score_affichage = self.score_font.render("Score : "+ str(self.score),1,(255,255,255)) ##met à jour le contenu (score) à afficher à l'écran
+        screen.blit((self.score_affichage), self.score_position) ##affiche le score mis à jour
 
     def __split_ennemies(self) -> list[Ennemie]:
         """
@@ -191,7 +198,6 @@ while running:
 
     jeu.event() # gère tous les évènements
     jeu.affichage() # gère l'affichage du jeu
-
     # flip() affiche le contenue à l'écran
     pygame.display.flip()
 
