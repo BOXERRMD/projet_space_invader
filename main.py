@@ -41,12 +41,18 @@ class Jeu:
 
         self.__event_attente_tires = pygame.event.custom_type()
         pygame.time.set_timer(self.__event_attente_tires, 100)
-        
+
         self.__protections = Protection.creer_protections(screen, nb_protections=4, y_position=370) # creer 3 protections avec la position horizontale
 
         self.__tir_ennemie_aleatoire: int = 50
 
         self.__texte_surface = pygame.font.Font(size=100)
+
+
+        self.score = 0 ##On initialise le score à 0 au début de la partie
+        self.score_font = pygame.font.Font('Fontscore.ttf',25) ##on défini la police d'écriture et la taille de l'affichage du score
+        self.score_position = [10,10] ##position du score
+
 
     def event(self) -> None:
         """
@@ -102,6 +108,7 @@ class Jeu:
                 for ennemie2 in range(len(self.__ennemies)):
                     if ennemie2 in liste_ennemie:
                         self.__ennemies.pop(ennemie2)
+                        self.score += 10 ##ajoute 10 au score du joueur
 
 
 
@@ -111,7 +118,7 @@ class Jeu:
 
                     if self.__tir is not None and self.__tir.collision(ennemie): # si il existe un tir et qu'il y a une collision (l'affichage de l'ennemie est désactivé dans self.__tire.collision
                         self.__tir = None # on retire le tire
-                
+
                 # Gestion des collisions entre le tir du vaisseau et les protections
                 if self.__tir is not None:
                     for protection in self.__protections:
@@ -126,7 +133,7 @@ class Jeu:
                 new_tirs = []
                 for tir_ennemie in self.__ennemies_tirs: # iter sur tous les tirs des ennemies
                     collision_detectee = False
-                    
+
                     for protection in self.__protections:
                         if tir_ennemie._Tire__rect.colliderect(protection.rect) and protection.vie:
                             protection.degats()  # La protection prend des dégâts
@@ -140,6 +147,9 @@ class Jeu:
                             new_tirs.append(tir_ennemie)
 
                 self.__ennemies_tirs = new_tirs.copy()
+
+
+
 
 
             if event.type == pygame.QUIT:
@@ -163,12 +173,15 @@ class Jeu:
 
         for ennemie in self.__ennemies:
             ennemie.afficher_ennemie()
-        
+
         for protection in self.__protections:
             protection.afficher_protection()
 
         if len(self.__ennemies) == 0:
             self.__victoire()
+
+        self.score_affichage = self.score_font.render("Score : "+ str(self.score),1,(255,255,255)) ##met à jour le contenu (score) à afficher à l'écran
+        screen.blit((self.score_affichage), self.score_position) ##affiche le score mis à jour
 
 
     def __victoire(self):
