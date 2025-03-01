@@ -48,6 +48,8 @@ class Jeu:
 
         self.__texte_surface = pygame.font.Font(size=100)
 
+        self.test = None
+
 
         self.score = 0 ##On initialise le score à 0 au début de la partie
         self.score_font = pygame.font.Font('Fontscore.ttf',25) ##on défini la police d'écriture et la taille de l'affichage du score
@@ -113,7 +115,6 @@ class Jeu:
                         self.score += 10 ##ajoute 10 au score du joueur
 
 
-
             if event.type == self.__event_attente_tires: # EVENT QUI FAIT BOUGER LES TIRS
                 
                 for ennemie in self.__ennemies: # itère sur tous les ennemies
@@ -147,6 +148,8 @@ class Jeu:
 
                             # Affiche une explosion temporaire
                             self.__vaisseau.est_touche()
+                            self.test = pygame.event.custom_type()
+                            pygame.time.set_timer(self.test, 200)
 
                             if self.__vaisseau.vie <= 0:
                                 self.__defaite()
@@ -160,8 +163,9 @@ class Jeu:
                 self.__ennemies_tirs = new_tirs.copy()
 
 
-
-
+            if event.type == self.test:
+                self.__vaisseau.touche = False
+                self.test = None
 
             if event.type == pygame.QUIT:
                 running = False

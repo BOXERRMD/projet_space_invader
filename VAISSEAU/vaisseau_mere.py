@@ -49,7 +49,6 @@ class Vaisseau:
         if self.__touche == True:
             self.__screen.blit(explosion, self.__rect)
             #pygame.time.delay(200) # Pause de 200 ms pour voir l'explosion
-            self.__touche = False
         else:
             self.__screen.blit(asset_vaisseau, self.__rect)
 
@@ -145,6 +144,14 @@ class Vaisseau:
         :return:
         """
         return tire_vaisseau
+
+    @property
+    def touche(self)->bool:
+        return self.__touche
+
+    @touche.setter
+    def touche(self, new: bool):
+        self.__touche = new
     
     def est_touche(self):
         self.__touche = True
