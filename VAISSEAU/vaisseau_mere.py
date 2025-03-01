@@ -16,6 +16,7 @@ Contient :
     1 class : Vaisseau
 """
 asset_vaisseau = pygame.image.load(path.join(getcwd(), "VAISSEAU\Assets\space__0006_Player.png"))
+explosion = pygame.image.load("VAISSEAU\Assets\space__0010_PlayerExplosion.png")
 
 class Vaisseau:
 
@@ -32,8 +33,9 @@ class Vaisseau:
 
         self.__screen: pygame.Surface = screen
         
-        self.__vie: int = 6 # sa vie avant de mourir
+        self.__vie: int = 3 # sa vie avant de mourir
         self.__vitesse: int = 0
+        self.__touche = False
         
         
     def est_en_vie(self) -> bool:
@@ -44,14 +46,19 @@ class Vaisseau:
         Affiche le vaisseau à sa position x y
         :return: None
         """
-        self.__screen.blit(asset_vaisseau, self.__rect)
+        if self.__touche == True:
+            self.__screen.blit(explosion, self.__rect)
+            #pygame.time.delay(200) # Pause de 200 ms pour voir l'explosion
+            self.__touche = False
+        else:
+            self.__screen.blit(asset_vaisseau, self.__rect)
 
     def tirer(self) -> Tire:
         """
         Tire un laser au dessus du vaisseau
         :return: Un tire appartanant au vaisseau
         """
-        largeur_tire = 2
+        largeur_tire = 3
         return Tire(self.__screen, x=self.__rect.center[0] - largeur_tire//2, y=self.__rect.y, longueur_tire=10, direction_tire=-10, color=(125, 20, 99), appartient_a=tire_vaisseau, largeur_tire=largeur_tire)
 
     @property
@@ -138,3 +145,7 @@ class Vaisseau:
         :return:
         """
         return tire_vaisseau
+    
+    def est_touche(self):
+        self.__touche = True
+        

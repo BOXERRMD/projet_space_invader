@@ -143,12 +143,10 @@ class Jeu:
                             break
                     if not collision_detectee:
                         if tir_ennemie.collision(self.__vaisseau):  
-                            self.__vaisseau.vie -= 1  # Réduit la vie du vaisseau
+                            
 
-                                # Affiche une explosion temporaire
-                            explosion = pygame.image.load("VAISSEAU\Assets\space__0010_PlayerExplosion.png")  # image d'explosion
-                            screen.blit(explosion, (self.__vaisseau.x, self.__vaisseau.y))
-
+                            # Affiche une explosion temporaire
+                            self.__vaisseau.est_touche()
 
                             if self.__vaisseau.vie <= 0:
                                 self.__defaite()
