@@ -52,6 +52,8 @@ class Jeu:
         self.score = 0 ##On initialise le score à 0 au début de la partie
         self.score_font = pygame.font.Font('Fontscore.ttf',25) ##on défini la police d'écriture et la taille de l'affichage du score
         self.score_position = [10,10] ##position du score
+        
+
 
 
     def event(self) -> None:
@@ -140,8 +142,19 @@ class Jeu:
                             collision_detectee = True  # Le tir s'arrête après avoir touché la protection
                             break
                     if not collision_detectee:
-                        if tir_ennemie.collision(self.__vaisseau): # si il existe un tir et qu'il y a une collision (l'affichage de l'ennemie est désactivé dans self.__tire.collision
-                            pass # le vaisseau meurt
+                        if tir_ennemie.collision(self.__vaisseau):  
+                            self.__vaisseau.vie -= 1  # Réduit la vie du vaisseau
+
+                                # Affiche une explosion temporaire
+                            explosion = pygame.image.load("VAISSEAU\Assets\space__0010_PlayerExplosion.png")  # image d'explosion
+                            screen.blit(explosion, (self.__vaisseau.x, self.__vaisseau.y))
+
+
+                            if self.__vaisseau.vie <= 0:
+                                self.__defaite()
+
+
+                        
                         else: # sinon
                             tir_ennemie.y = tir_ennemie.y + 15
                             new_tirs.append(tir_ennemie)
@@ -182,6 +195,10 @@ class Jeu:
 
         self.score_affichage = self.score_font.render("Score : "+ str(self.score),1,(255,255,255)) ##met à jour le contenu (score) à afficher à l'écran
         screen.blit((self.score_affichage), self.score_position) ##affiche le score mis à jour
+        
+        # Affichage des vies
+        self.vies_affichage = self.score_font.render("Vies : " + str(self.__vaisseau.vie), 1, (255, 255, 255))# comme pour le score
+        screen.blit(self.vies_affichage, [400, 10])  # affiche la vie a coté du score
 
 
     def __victoire(self):
@@ -194,6 +211,21 @@ class Jeu:
         r.x = window_longueur/2 - r.centerx
         r.y = window_largeur/2 - r.centery
         screen.blit(texte, r)
+        
+    def __defaite(self):
+        """
+        Affiche un écran de défaite et ferme le jeu
+        """
+        texte = pygame.font.Font.render(self.__texte_surface, "DEFAITE", 1, (255, 0, 0))
+        r = texte.get_rect()
+        r.x = window_longueur / 2 - r.centerx
+        r.y = window_largeur / 2 - r.centery
+        screen.blit(texte, r)
+        pygame.display.flip()
+        pygame.time.delay(3000)  # Pause de 3 secondes avant de quitter
+        pygame.quit()# ferme le jeux
+        exit()
+
 
 
     def __split_ennemies(self) -> list[Ennemie]:
@@ -232,6 +264,7 @@ class Jeu:
 
         else:
             return annim_lignes[1]
+        
 
 jeu = Jeu() # initialisation du jeu
 

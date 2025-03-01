@@ -32,7 +32,7 @@ class Vaisseau:
 
         self.__screen: pygame.Surface = screen
         
-        self.__vie: int = 1 # sa vie avant de mourir
+        self.__vie: int = 6 # sa vie avant de mourir
         self.__vitesse: int = 0
         
         
