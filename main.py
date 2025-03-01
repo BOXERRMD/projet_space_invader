@@ -48,7 +48,7 @@ class Jeu:
 
         self.__texte_surface = pygame.font.Font(size=100)
 
-        self.test = None
+        self.delai_explosion = None
 
 
         self.score = 0 ##On initialise le score à 0 au début de la partie
@@ -149,7 +149,7 @@ class Jeu:
                             # Affiche une explosion temporaire
                             self.__vaisseau.est_touche()
                             self.test = pygame.event.custom_type()
-                            pygame.time.set_timer(self.test, 200)
+                            pygame.time.set_timer(self.delai_explosion, 200)
 
                             if self.__vaisseau.vie <= 0:
                                 self.__defaite()
@@ -165,7 +165,7 @@ class Jeu:
 
             if event.type == self.test:
                 self.__vaisseau.touche = False
-                self.test = None
+                self.delai_explosion = None
 
             if event.type == pygame.QUIT:
                 running = False
