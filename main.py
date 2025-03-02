@@ -3,7 +3,7 @@ from random import randint
 from VAISSEAU.vaisseau_mere import Vaisseau # import du vaisseau mère
 from ENNEMIES.ennemies_vaisseau_mere import Ennemie # import des ennemies
 from PROTECTION.protections_vaisseau_mere import Protection # import des protections
-from TIRES.tire import Tire
+from TIRES.tire import Tire # beaucoup de tirs pour pas grand chose finalement :/ Mais vous savez, moi je ne crois pas qu'il y ait de bonnes ou de mauvaises situations. Moi, si je devais résumer ma vie, aujourd’hui avec vous, je dirais que c’est d´abord des rencontres, des gens qui m’ont tendu la main peut-être à un moment où je ne pouvais pas, où j’étais seul chez moi. Et c’est assez curieux de se dire que les hasards, les rencontres forgent une destinée. Parce que quand on a le goût de la chose, quand on a le goût de la chose bien faite, le beau geste, parfois on ne trouve pas l’interlocuteur en face, je dirais le miroir qui vous aide à avancer. Alors ce n’est pas mon cas, comme je disais là, puisque moi au contraire j’ai pu, et je dis merci à la vie, je lui dis merci, je chante la vie, je danse la vie, je ne suis qu’amour. Et finalement quand beaucoup de gens aujourd’hui me disent : « Mais comment fais-tu pour avoir cette humanité ? » eh bien je leur réponds très simplement, je leur dis : « C’est ce goût de l´amour », ce goût donc, qui m’a poussé aujourd’hui à entreprendre une construction mécanique, mais demain qui sait ? Peut-être simplement à me mettre au service de la communauté, à faire le don, le don de soi.
 
 from information_jeu import * # toutes les informations du jeu
 
@@ -31,24 +31,24 @@ class Jeu:
 
         self.__ennemies: list[Ennemie] = self.__split_ennemies() # sépare les ennemies de façon équitable sur plusieurs lignes
 
-        self.__tir: Union[Tire, None] = None # le tir en cour
+        self.__tir: Union[Tire, None] = None # le tir en cour du vaisseau
         self.__ennemies_tirs: list[Tire] = [] # la liste des tirs des ennemies
 
-        self.__event_attente_ennemie = pygame.event.custom_type()
-        pygame.time.set_timer(self.__event_attente_ennemie, 900)
-        self.__event_count: int = 0
-        self.__event_direction: int = 5
+        self.__event_attente_ennemie = pygame.event.custom_type() # event pour faire bouger periodiquement les ennemies
+        pygame.time.set_timer(self.__event_attente_ennemie, 900) # réglé sur 900ms
+        self.__event_count: int = 0 # nombre de fois que les ennemies ont bougé dans une direction
+        self.__event_direction: int = 5 # direction et vitesse des ennemies
 
-        self.__event_attente_tires = pygame.event.custom_type()
-        pygame.time.set_timer(self.__event_attente_tires, 100)
+        self.__event_attente_tires = pygame.event.custom_type() # event pour faire bouger periodiquement les tirs
+        pygame.time.set_timer(self.__event_attente_tires, 100) # réglé à 100ms
 
         self.__protections = Protection.creer_protections(screen, nb_protections=4, y_position=370) # creer 3 protections avec la position horizontale
 
-        self.__tir_ennemie_aleatoire: int = 50
+        self.__tir_ennemie_aleatoire: int = 50 # 1 chance sur X qu'un ennemie puisse tirer. Ici 1/50
 
-        self.__texte_surface = pygame.font.Font(size=100)
+        self.__texte_surface = pygame.font.Font(size=100) # initialisation du texte
 
-        self.delai_explosion = None
+        self.delai_explosion = None # le délait de l'explosion du vaisseau (qui sera un évènement quand le vaisseau se fera toucher)
 
 
         self.score = 0 ##On initialise le score à 0 au début de la partie
@@ -94,13 +94,13 @@ class Jeu:
 
                 liste_ennemie = []
                 for ennemie in range(len(self.__ennemies)):
-                    if not self.__ennemies[ennemie].vie:
+                    if not self.__ennemies[ennemie].vie: # si l'ennemie est mort
                         liste_ennemie.append(ennemie)
                     self.__ennemies[ennemie].x = self.__ennemies[
                                                      ennemie].x + self.__event_direction  ##TRANSFORMER EN LISTE POUR LES SUPPRIMER A LA MORT
 
-                    if self.__ennemies[ennemie].vie and randint(0, self.__tir_ennemie_aleatoire) == 0: # tire aléatoire des ennemies
-                        self.__ennemies_tirs.append(self.__ennemies[ennemie].tirer())
+                    if self.__ennemies[ennemie].vie and randint(0, self.__tir_ennemie_aleatoire) == 0: # tire aléatoire des ennemies s'il sont en vie
+                        self.__ennemies_tirs.append(self.__ennemies[ennemie].tirer()) # on ajoute le tir dans la liste des tirs ennemie
 
                 self.__event_count += 1  ##rajouter un "if ennemie.mort ou un truc du style"
 
@@ -124,23 +124,22 @@ class Jeu:
 
                 # Gestion des collisions entre le tir du vaisseau et les protections
                 if self.__tir is not None:
+                    self.__tir.y = self.__tir.y - 35  # on fait bouger le tir du vaisseau
                     for protection in self.__protections:
-                        if protection.vie and self.__tir._Tire__rect.colliderect(protection.rect):
-                            protection.degats()  # La protection prend des dégâts
-                            self.__tir = None  # On retire le tir après la collision
-                            break  # Sortir de la boucle après une collision
+                        if protection.vie and self.__tir._Tire__rect.colliderect(protection.rect): # si colision entre la protection et le tire du vaisseau + la protection est en vie
+                            protection.degats()
+                            self.__tir = None
+                            break
 
-                if self.__tir is not None: # s' il existe un tire
-                    self.__tir.y = self.__tir.y - 35 # on le fait bouger
 
                 new_tirs = []
-                for tir_ennemie in self.__ennemies_tirs: # iter sur tous les tirs des ennemies
-                    collision_detectee = False
+                for tir_ennemie in self.__ennemies_tirs:
+                    collision_detectee = False # colision d'un tir sur les protection
 
                     for protection in self.__protections:
-                        if tir_ennemie._Tire__rect.colliderect(protection.rect) and protection.vie:
+                        if tir_ennemie._Tire__rect.colliderect(protection.rect) and protection.vie: # s'il y a colision avec une protection et  que la protection est en vie
                             protection.degats()  # La protection prend des dégâts
-                            collision_detectee = True  # Le tir s'arrête après avoir touché la protection
+                            collision_detectee = True  # Le tir s'arrête après avoir touché la protection (par défaut)
                             break
                     if not collision_detectee:
                         if tir_ennemie.collision(self.__vaisseau):  
@@ -148,24 +147,26 @@ class Jeu:
 
                             # Affiche une explosion temporaire
                             self.__vaisseau.est_touche()
-                            self.test = pygame.event.custom_type()
+                            self.delai_explosion = pygame.event.custom_type() # set un évènement pour l'affichage du vaisseau explosé
                             pygame.time.set_timer(self.delai_explosion, 200)
 
-                            if self.__vaisseau.vie <= 0:
-                                self.__defaite()
+
+                            if self.__vaisseau.vie <= 0: # si la vie du vaisseau déscend à 0 ou moins
+                                self.__defaite() # on affiche l'écran de fin
 
 
                         
-                        else: # sinon
+                        else:
+                            # Permet de faire avancer les tires et d'append les tirs toujours en cours dans une liste
                             tir_ennemie.y = tir_ennemie.y + 15
                             new_tirs.append(tir_ennemie)
 
-                self.__ennemies_tirs = new_tirs.copy()
+                self.__ennemies_tirs = new_tirs.copy() # on met une copie des tirs encore valide dans la variable des tirs ennemies
 
 
-            if event.type == self.test:
-                self.__vaisseau.touche = False
-                self.delai_explosion = None
+            if event.type == self.delai_explosion: # si l'event associé à l'explosion du vaisseau est rencontré
+                self.__vaisseau.touche = False # on modifie la valeur du vaisseau touché
+                self.delai_explosion = None # on réinitialise l'évènement jusqu'à la prochaine fois qu'il sera touché
 
             if event.type == pygame.QUIT:
                 running = False
@@ -208,7 +209,7 @@ class Jeu:
         Affiche un écran de fin si le joueur a gagné
         :return:
         """
-        texte = pygame.font.Font.render(self.__texte_surface, "VICTOIRE !", 1, (255,255,255))
+        texte = self.score_font.render("VICTOIRE !", 1, (255,255,255))
         r = texte.get_rect()
         r.x = window_longueur/2 - r.centerx
         r.y = window_largeur/2 - r.centery
@@ -218,7 +219,7 @@ class Jeu:
         """
         Affiche un écran de défaite et ferme le jeu
         """
-        texte = pygame.font.Font.render(self.__texte_surface, "DEFAITE", 1, (255, 0, 0))
+        texte = self.score_font.render("DEFAITE", 1, (255, 0, 0))
         r = texte.get_rect()
         r.x = window_longueur / 2 - r.centerx
         r.y = window_largeur / 2 - r.centery
@@ -226,7 +227,7 @@ class Jeu:
         pygame.display.flip()
         pygame.time.delay(3000)  # Pause de 3 secondes avant de quitter
         pygame.quit()# ferme le jeux
-        exit()
+
 
 
 

@@ -1,4 +1,4 @@
-from __future__ import annotations
+from __future__ import annotations # utile uniquement pour les annotations de type
 import pygame
 
 from information_jeu import tire_vaisseau, tire_ennemie, window_largeur
@@ -6,7 +6,7 @@ from types_perso import Coordonnees
 
 from typing import Union, TYPE_CHECKING
 
-if TYPE_CHECKING: # permet une importation non circulaire des modules mais uniquement sous la forme d'un type !!!
+if TYPE_CHECKING: # permet une importation non circulaire des modules mais uniquement pour les annotations de type !!!
     from VAISSEAU.vaisseau_mere import Vaisseau
     from ENNEMIES.ennemies_vaisseau_mere import Ennemie
 

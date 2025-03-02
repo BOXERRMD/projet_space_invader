@@ -16,7 +16,7 @@ Contient :
     1 class : Vaisseau
 """
 asset_vaisseau = pygame.image.load(path.join(getcwd(), "VAISSEAU\Assets\space__0006_Player.png"))
-explosion = pygame.image.load("VAISSEAU\Assets\space__0010_PlayerExplosion.png")
+explosion = pygame.image.load(path.join(getcwd(), "VAISSEAU\Assets\space__0010_PlayerExplosion.png"))
 
 class Vaisseau:
 
@@ -29,7 +29,7 @@ class Vaisseau:
         :param screen: la surface ou dessiner
         """
 
-        self.__rect = pygame.Rect(x, y, 26, 16)
+        self.__rect = pygame.Rect(x, y, 26, 16) # dimension du rectangle de collision
 
         self.__screen: pygame.Surface = screen
         
@@ -48,7 +48,7 @@ class Vaisseau:
         """
         if self.__touche == True:
             self.__screen.blit(explosion, self.__rect)
-            #pygame.time.delay(200) # Pause de 200 ms pour voir l'explosion
+
         else:
             self.__screen.blit(asset_vaisseau, self.__rect)
 
@@ -58,6 +58,8 @@ class Vaisseau:
         :return: Un tire appartanant au vaisseau
         """
         largeur_tire = 3
+        # personnellement, cette ligne est vraiment grande. MAIS elle rentre sur mon écran :D c'est vraiment une phrase typique du developpeur
+        # qui n'a pas envie de corriger son code et qui dit "ça marche sur mon ordinateur :p"
         return Tire(self.__screen, x=self.__rect.center[0] - largeur_tire//2, y=self.__rect.y, longueur_tire=10, direction_tire=-10, color=(125, 20, 99), appartient_a=tire_vaisseau, largeur_tire=largeur_tire)
 
     @property
@@ -147,12 +149,26 @@ class Vaisseau:
 
     @property
     def touche(self)->bool:
+        """
+        Renvoie si le vaisseau a été touché
+        :return:
+        """
         return self.__touche
 
     @touche.setter
     def touche(self, new: bool):
+        """
+        Modifie la valeur du vaisseau s'il a été touché
+        Utiliser pour réinitialiser la valeur self.__touche à False après que le timer pour l'affichage du vaisseau explosé ait pris fin
+        :param new:
+        :return:
+        """
         self.__touche = new
     
     def est_touche(self):
+        """
+        Si le vaisseau a été touché
+        :return:
+        """
         self.__touche = True
         
